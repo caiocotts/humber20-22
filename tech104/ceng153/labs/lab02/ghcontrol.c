@@ -1,7 +1,18 @@
 
 
 #include "ghcontrol.h"
-#include <stdint.h>
+
+void GhDelay(int milliseconds) {
+  long wait;
+  clock_t now, start;
+
+  wait = milliseconds * (CLOCKS_PER_SEC / 1000);
+  start = clock();
+  now = start;
+  while ((now - start) < wait) {
+    now = clock();
+  }
+}
 
 uint64_t GhGetSerial(void) {
   static uint64_t serial = 0;
@@ -11,24 +22,29 @@ uint64_t GhGetSerial(void) {
   fp = fopen("/proc/cpuinfo", "r");
   if (fp != NULL) {
     while (fgets(buf, sizeof(buf), fp) != NULL) {
-      if (!strcasecmp(searchstring, buf, strlen(searchstring))) {
-        sscanf(buf + strlen(searchstring), "%Lx", &serial);
+      if (!strncasecmp(searchstring, buf, strlen(searchstring))) {
+        sscanf(buf + strlen(searchstring), "%lu", &serial);
       }
     }
     fclose(fp);
   }
   if (serial == 0) {
     system("uname -a");
-    system("ls --fu /usr/lib/codeblocks | grep -Po '\\.\\k[^ ]+'>stam.txt");
+    system("ls --fu /usr/lib/codeblocks | grep -Po '\\.\\K[^ ]+'>stamp.txt");
     fp = fopen("stamp.txt", "r");
     if (fp != NULL) {
       while (fgets(buf, sizeof(buf), fp) != NULL) {
-        sscanf(buf, "%Lx", &serial);
+        sscanf(buf, "%lu", &serial);
       }
       fclose(fp);
     }
   }
   return serial;
+}
+
+int GhGetRandom(int range) { 
+	
+	return rand() % range; 
 }
 
 void GhDisplayHeader(const char *sname) {
