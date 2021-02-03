@@ -7,7 +7,7 @@ ghcontrol.o: ghcontrol.c ghcontrol.h
 	gcc -g -c ghcontrol.c
 clean:
 	rm *.o	
-
+ 
 
 
 

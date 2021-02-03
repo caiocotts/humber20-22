@@ -1,5 +1,8 @@
-
-
+#include <time.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "ghcontrol.h"
 
 void GhDelay(int milliseconds) {
@@ -23,7 +26,7 @@ uint64_t GhGetSerial(void) {
   if (fp != NULL) {
     while (fgets(buf, sizeof(buf), fp) != NULL) {
       if (!strncasecmp(searchstring, buf, strlen(searchstring))) {
-        sscanf(buf + strlen(searchstring), "%lu", &serial);
+        sscanf(buf + strlen(searchstring), "%Lx", &serial);
       }
     }
     fclose(fp);
@@ -42,10 +45,7 @@ uint64_t GhGetSerial(void) {
   return serial;
 }
 
-int GhGetRandom(int range) { 
-	
-	return rand() % range; 
-}
+int GhGetRandom(int range) { return rand() % range; }
 
 void GhDisplayHeader(const char *sname) {
   fprintf(stdout, "%s's Greenhouse Controller\n\n\n", sname);
